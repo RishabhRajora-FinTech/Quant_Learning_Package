@@ -1,0 +1,1 @@
+ARMA, GARCH and Cointegration
