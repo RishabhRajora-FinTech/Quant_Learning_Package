@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Engineer Elite — Rishabh Rajora</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080c14;
+  --bg2: #0d1320;
+  --bg3: #111827;
+  --surface: rgba(255,255,255,0.03);
+  --surface-h: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.07);
+  --border-h: rgba(255,255,255,0.14);
+  --text: #c8d1dc;
+  --text-dim: #6b7a8d;
+  --text-bright: #eef2f7;
+  --cyan: #22d3ee;
+  --cyan-dim: rgba(34,211,238,0.12);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.1);
+  --green: #34d399;
+  --green-dim: rgba(52,211,153,0.1);
+  --red: #f87171;
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.1);
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Outfit', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 14px;
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 500px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(34,211,238,0.04) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.wrap { max-width: 920px; margin: 0 auto; padding: 28px 20px 60px; position: relative; z-index: 1; }
+
+/* Header */
+.hdr { text-align: center; margin-bottom: 32px; }
+.hdr-pre { font-family: var(--mono); font-size: 10px; letter-spacing: 0.25em; color: var(--cyan); font-weight: 600; margin-bottom: 8px; }
+.hdr h1 { font-size: 32px; font-weight: 800; color: var(--text-bright); letter-spacing: -0.03em; line-height: 1.15; }
+.hdr h1 span { background: linear-gradient(135deg, var(--cyan), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hdr-sub { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+
+/* Tabs */
+.tabs {
+  display: flex; flex-wrap: wrap; gap: 4px; justify-content: center;
+  padding: 6px; background: var(--bg2); border-radius: 12px;
+  border: 1px solid var(--border); margin-bottom: 28px;
+  position: sticky; top: 8px; z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.tab {
+  padding: 7px 14px; border-radius: 8px; border: none;
+  background: transparent; color: var(--text-dim);
+  font: 600 11.5px/1 var(--sans); cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+}
+.tab:hover { color: var(--text); background: var(--surface-h); }
+.tab.active { color: var(--cyan); background: var(--cyan-dim); }
+
+/* Sections */
+.section { display: none; animation: fadeUp 0.35s ease; }
+.section.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* Cards */
+.card {
+  border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: 10px; overflow: hidden;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: var(--border-h); }
+.card-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 16px; cursor: pointer; user-select: none;
+  background: var(--surface); transition: background 0.2s;
+}
+.card-head:hover { background: var(--surface-h); }
+.card-title { flex: 1; font-size: 13.5px; font-weight: 600; color: var(--text-bright); }
+.card-tag {
+  font: 700 9px/1 var(--mono); letter-spacing: 0.07em;
+  padding: 3px 8px; border-radius: 4px;
+  background: var(--cyan-dim); color: var(--cyan);
+  border: 1px solid rgba(34,211,238,0.2);
+}
+.card-tag.amber { background: var(--amber-dim); color: var(--amber); border-color: rgba(245,158,11,0.2); }
+.card-tag.green { background: var(--green-dim); color: var(--green); border-color: rgba(52,211,153,0.2); }
+.card-tag.purple { background: var(--purple-dim); color: var(--purple); border-color: rgba(167,139,250,0.2); }
+.card-arrow {
+  font-size: 14px; color: var(--text-dim);
+  transition: transform 0.25s; display: inline-block;
+}
+.card.open .card-arrow { transform: rotate(180deg); }
+.card-body { padding: 4px 16px 16px; display: none; }
+.card.open .card-body { display: block; animation: fadeUp 0.25s ease; }
+.card-body p { margin: 6px 0; font-size: 12.5px; }
+.card-body ul, .card-body ol { padding-left: 18px; margin: 6px 0; }
+.card-body li { font-size: 12.5px; margin-bottom: 4px; }
+
+/* Utility */
+.hi { color: var(--cyan); font-weight: 600; }
+.b { color: var(--text-bright); font-weight: 600; }
+.warn { color: var(--amber); }
+.dim { color: var(--text-dim); }
+.sm { font-size: 11px; }
+.mono { font-family: var(--mono); }
+
+/* Tier bars */
+.tier {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 14px; background: var(--surface);
+  border-radius: 6px; margin-bottom: 6px;
+}
+.tier-label { font: 800 10px/1 var(--mono); letter-spacing: 0.06em; min-width: 60px; padding-top: 4px; }
+
+/* Track blocks */
+.track { margin-bottom: 16px; }
+.track-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.track-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font: 800 10px/1 var(--mono); color: var(--bg);
+}
+.track-title { font-size: 14px; font-weight: 700; color: var(--text-bright); }
+.track-items { padding-left: 30px; }
+.track-item {
+  font-size: 12.5px; color: var(--text); padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  line-height: 1.75;
+}
+.track-item:last-child { border: none; }
+
+/* Grid helpers */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0; }
+.grid-cell {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 5px 9px; background: var(--surface); border-radius: 5px;
+  font-size: 11.5px;
+}
+.grid-cell span:first-child { color: var(--text-bright); }
+.grid-cell span:last-child { color: var(--text-dim); font-size: 10px; font-family: var(--mono); }
+
+/* Highlight box */
+.box {
+  padding: 16px; border-radius: 10px; margin-bottom: 16px;
+  font-size: 12.5px; line-height: 1.8;
+}
+.box-cyan { background: var(--cyan-dim); border: 1px solid rgba(34,211,238,0.15); }
+.box-amber { background: var(--amber-dim); border: 1px solid rgba(245,158,11,0.15); color: var(--amber); }
+.box-green { background: var(--green-dim); border: 1px solid rgba(52,211,153,0.15); }
+.box-dark { background: var(--bg2); border: 1px solid var(--border); }
+
+/* Table */
+.tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+.tbl th { padding: 7px 8px; text-align: left; color: var(--cyan); font: 700 10px/1 var(--mono); border-bottom: 1px solid var(--border-h); }
+.tbl td { padding: 6px 8px; color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.03); }
+.tbl tr:nth-child(even) td { background: rgba(255,255,255,0.01); }
+.tbl td:first-child { color: var(--cyan); font-weight: 700; font-family: var(--mono); }
+
+/* Timeline */
+.tl-item { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.tl-item:last-child { border: none; }
+.tl-when { min-width: 80px; }
+.tl-when .t { font: 700 11px/1 var(--sans); }
+.tl-when .s { font-size: 10px; color: var(--text-dim); }
+.tl-desc { font-size: 12px; color: var(--text); }
+
+/* Project card */
+.proj {
+  padding: 14px; margin-bottom: 8px;
+  background: var(--surface); border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.proj-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.proj-title { font-size: 13px; font-weight: 600; color: var(--text-bright); }
+.proj-desc { font-size: 12px; margin: 6px 0; }
+.proj-meta { font-size: 11px; margin: 4px 0; }
+
+/* Center callout */
+.callout {
+  text-align: center; padding: 24px 20px; margin-top: 24px;
+  background: var(--surface); border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.callout h3 { font-size: 17px; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
+.callout p { font-size: 13px; color: var(--text-dim); max-width: 540px; margin: 0 auto; line-height: 1.85; }
+
+/* Footer */
+.foot { text-align: center; margin-top: 32px; font-size: 11px; color: #2a3444; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.03); }
+
+@media (max-width: 640px) {
+  .grid2 { grid-template-columns: 1fr; }
+  .hdr h1 { font-size: 24px; }
+  .tabs { gap: 2px; padding: 4px; }
+  .tab { padding: 6px 10px; font-size: 10.5px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-pre">// COMPLETE MASTERY ROADMAP</div>
+  <h1>Financial Engineer <span>Elite</span></h1>
+  <div class="hdr-sub">Rishabh Rajora &mdash; From practitioner to the best in the business</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs" id="tabs">
+  <button class="tab active" data-tab="tree">Skill Tree</button>
+  <button class="tab" data-tab="math">Mathematics</button>
+  <button class="tab" data-tab="prog">Programming</button>
+  <button class="tab" data-tab="finance">Finance Deep</button>
+  <button class="tab" data-tab="systems">Systems</button>
+  <button class="tab" data-tab="projects">Build Portfolio</button>
+  <button class="tab" data-tab="books">Reading List</button>
+  <button class="tab" data-tab="weekly">Weekly System</button>
+  <button class="tab" data-tab="career">Career Strategy</button>
+  <button class="tab" data-tab="elite">Elite Edge</button>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: SKILL TREE -->
+<!-- ============================================================ -->
+<div class="section active" id="sec-tree">
+
+  <div class="box box-cyan">
+    <div style="font-size:15px;font-weight:700;color:var(--cyan);margin-bottom:6px;">The Complete Financial Engineer</div>
+    A world-class quant sits at the intersection of four disciplines: deep mathematics, elite programming, sophisticated financial knowledge, and systems thinking. Most people are strong in one, decent in two. Being genuinely strong in all four is what makes you irreplaceable.
+  </div>
+
+  <div class="mono dim sm" style="margin-bottom:10px;padding-left:2px;">MASTERY TIERS</div>
+
+  <div class="tier" style="border-left:3px solid var(--green);">
+    <div class="tier-label" style="color:var(--green);">TIER 1</div>
+    <div><div class="b">Foundation</div><div class="sm dim">You can explain concepts, solve textbook problems, implement basic models. &mdash; 70% of quant candidates stop here.</div></div>
+  </div>
+  <div class="tier" style="border-left:3px solid var(--cyan);">
+    <div class="tier-label" style="color:var(--cyan);">TIER 2</div>
+    <div><div class="b">Practitioner</div><div class="sm dim">You build production systems, debug novel problems, optimize for real constraints. &mdash; You get hired at good firms.</div></div>
+  </div>
+  <div class="tier" style="border-left:3px solid var(--purple);">
+    <div class="tier-label" style="color:var(--purple);">TIER 3</div>
+    <div><div class="b">Expert</div><div class="sm dim">You design new models, identify flaws in existing ones, bridge theory to practice. &mdash; You become the go-to person.</div></div>
+  </div>
+  <div class="tier" style="border-left:3px solid var(--amber);">
+    <div class="tier-label" style="color:var(--amber);">TIER 4</div>
+    <div><div class="b">Elite</div><div class="sm dim">You create frameworks others use. You see cross-domain connections. You shape how teams think. &mdash; This is the target.</div></div>
+  </div>
+
+  <div class="mono dim sm" style="margin:20px 0 10px;padding-left:2px;">THE FOUR PILLARS</div>
+
+  <!-- Pillar 1 -->
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Pillar 1: Mathematics &mdash; The Language</span>
+      <span class="card-tag">CORE</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="grid2">
+        <div class="grid-cell"><span>Probability Theory</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>Stochastic Calculus</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>Linear Algebra</span><span>Tier 2 min</span></div>
+        <div class="grid-cell"><span>Numerical Methods</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>Optimization</span><span>Tier 2 min</span></div>
+        <div class="grid-cell"><span>Statistics &amp; Estimation</span><span>Tier 2 min</span></div>
+        <div class="grid-cell"><span>Measure Theory</span><span>Tier 2 target</span></div>
+        <div class="grid-cell"><span>PDEs</span><span>Tier 2 min</span></div>
+        <div class="grid-cell"><span>Real Analysis</span><span>Tier 1 min</span></div>
+        <div class="grid-cell"><span>Information Theory</span><span>Tier 1 useful</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pillar 2 -->
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Pillar 2: Programming &mdash; The Tool</span>
+      <span class="card-tag">CORE</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="grid2">
+        <div class="grid-cell"><span>Python (advanced)</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>Data Structures &amp; Algos</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>C++ fundamentals</span><span>Tier 2 target</span></div>
+        <div class="grid-cell"><span>SQL (advanced)</span><span>Tier 2 req</span></div>
+        <div class="grid-cell"><span>System Design</span><span>Tier 2 req</span></div>
+        <div class="grid-cell"><span>OCaml / Functional</span><span>Tier 1 useful</span></div>
+        <div class="grid-cell"><span>Git + DevOps</span><span>Tier 2 req</span></div>
+        <div class="grid-cell"><span>Low-Latency Patterns</span><span>Tier 1 useful</span></div>
+        <div class="grid-cell"><span>Parallel Computing</span><span>Tier 1 min</span></div>
+        <div class="grid-cell"><span>Testing &amp; Validation</span><span>Tier 2 req</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pillar 3 -->
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Pillar 3: Finance &mdash; The Domain</span>
+      <span class="card-tag">CORE</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="grid2">
+        <div class="grid-cell"><span>Derivatives Pricing</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>Greeks &amp; Risk Mgmt</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>Volatility Modeling</span><span>Tier 3 req</span></div>
+        <div class="grid-cell"><span>Fixed Income</span><span>Tier 2 req</span></div>
+        <div class="grid-cell"><span>Market Microstructure</span><span>Tier 2 req</span></div>
+        <div class="grid-cell"><span>Credit Risk</span><span>Tier 2 target</span></div>
+        <div class="grid-cell"><span>Exotic Structures</span><span>Tier 2 req</span></div>
+        <div class="grid-cell"><span>Portfolio Theory</span><span>Tier 2 min</span></div>
+        <div class="grid-cell"><span>Regulation (Basel/FRTB)</span><span>Tier 1 min</span></div>
+        <div class="grid-cell"><span>Energy/Commodity Mkts</span><span>Tier 2 (edge)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pillar 4 -->
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Pillar 4: Systems Thinking &mdash; The Differentiator</span>
+      <span class="card-tag amber">EDGE</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="grid2">
+        <div class="grid-cell"><span>Pricing Engine Arch</span><span>Tier 2 (have)</span></div>
+        <div class="grid-cell"><span>Trade Lifecycle</span><span>Tier 3 (have)</span></div>
+        <div class="grid-cell"><span>Data Pipelines</span><span>Tier 2 target</span></div>
+        <div class="grid-cell"><span>Model Validation</span><span>Tier 2 req</span></div>
+        <div class="grid-cell"><span>Backtesting Frameworks</span><span>Tier 2 target</span></div>
+        <div class="grid-cell"><span>Production ML Ops</span><span>Tier 1 useful</span></div>
+        <div class="grid-cell"><span>Risk Infrastructure</span><span>Tier 2 target</span></div>
+        <div class="grid-cell"><span>Real-time Systems</span><span>Tier 1 min</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box box-amber" style="margin-top:16px;">
+    <span class="b" style="color:var(--amber);">Your unique advantage:</span> Most quants come from pure math/CS and learn finance on the job. You come from finance ops + model development. You already understand WHY trades fail, HOW systems break, and WHAT clients need. That operational intuition is rare and extremely valuable at Tier 4.
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: MATHEMATICS -->
+<!-- ============================================================ -->
+<div class="section" id="sec-math">
+
+  <p class="dim" style="margin-bottom:16px;">Mathematics is not a subject you "finish." The best quants revisit fundamentals constantly, finding deeper understanding each time.</p>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Probability: From Intuition to Mastery</span>
+      <span class="card-tag green">MONTHS 1-4</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--green);">1</span><span class="track-title">Foundations (Weeks 1-4)</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Counting:</span> Permutations, combinations, multinomial coefficients, stars-and-bars, inclusion-exclusion, double counting</div>
+          <div class="track-item"><span class="hi">Conditional probability:</span> Chain rule, total probability, Bayes theorem &mdash; until it's reflexive, not calculated</div>
+          <div class="track-item"><span class="hi">Random variables:</span> PMF, PDF, CDF, joint/marginal distributions, independence vs uncorrelatedness (know the difference!)</div>
+          <div class="track-item"><span class="hi">ALL distributions:</span> Bernoulli, Binomial, Geometric, Neg Binomial, Hypergeometric, Poisson, Uniform, Exponential, Normal, Gamma, Beta, Chi-sq, t, F &mdash; for each know: mean, variance, MGF, when it arises, relationship to others</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--cyan);">2</span><span class="track-title">Intermediate (Weeks 5-10)</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Expectation mastery:</span> Linearity (even without independence), iterated expectations E[E[X|Y]]=E[X], indicator trick, LOTUS</div>
+          <div class="track-item"><span class="hi">Variance:</span> Var(aX+bY), conditional variance formula Var(X)=E[Var(X|Y)]+Var(E[X|Y]), covariance and correlation</div>
+          <div class="track-item"><span class="hi">Generating functions:</span> MGF to derive sums. PGF for discrete. Characteristic functions (Fourier) for heavy tails</div>
+          <div class="track-item"><span class="hi">Convergence:</span> In distribution, in probability, almost surely, in Lp &mdash; know which implies which</div>
+          <div class="track-item"><span class="hi">Limit theorems:</span> LLN (weak+strong), CLT (Lindeberg condition), Berry-Esseen for convergence rate</div>
+          <div class="track-item"><span class="hi">Markov chains:</span> Chapman-Kolmogorov, state classification, stationary distributions, ergodic theorem, hitting times</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--purple);">3</span><span class="track-title">Advanced (Weeks 11-16)</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Martingales:</span> Definition, optional stopping, convergence, Doob's maximal inequality. Connection to fair games and pricing.</div>
+          <div class="track-item"><span class="hi">Poisson processes:</span> Merging, splitting, thinning. Connection to exponential. Compound Poisson for jump models.</div>
+          <div class="track-item"><span class="hi">Order statistics:</span> Distribution of max/min, joint density. Useful for barrier pricing intuition.</div>
+          <div class="track-item"><span class="hi">Extreme value theory:</span> GEV (Gumbel, Frechet, Weibull). Block maxima vs peaks-over-threshold.</div>
+          <div class="track-item"><span class="hi">Concentration inequalities:</span> Markov, Chebyshev, Hoeffding, Chernoff, Azuma. Critical for estimation.</div>
+        </div>
+      </div>
+      <p><span class="hi">Mastery test:</span> Can you solve 90% of Xinfeng Zhou's problems in under 5 min? If yes, Tier 2. If you create novel variations and solve those, Tier 3.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Stochastic Calculus: The Heart of Quant Finance</span>
+      <span class="card-tag">MONTHS 3-8</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--green);">1</span><span class="track-title">Brownian Motion (Weeks 1-3)</span></div>
+        <div class="track-items">
+          <div class="track-item">Construction: Random walk limit, Donsker's invariance principle</div>
+          <div class="track-item">Properties: Independent increments, Gaussian, continuous paths, nowhere differentiable, unbounded variation, quadratic variation = t</div>
+          <div class="track-item">Key results: Reflection principle, maximum distribution, hitting times, Levy's characterization</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--cyan);">2</span><span class="track-title">It&ocirc; Calculus (Weeks 4-8)</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">It&ocirc; integral:</span> Why Riemann fails (BM has infinite variation). Ito's choice: evaluate at left endpoint. Zero mean, isometry, martingale.</div>
+          <div class="track-item"><span class="hi">It&ocirc;'s lemma:</span> df = (&part;f/&part;t + &mu;&middot;&part;f/&part;x + &frac12;&sigma;&sup2;&middot;&part;&sup2;f/&part;x&sup2;)dt + &sigma;&middot;&part;f/&part;x&middot;dW &mdash; the extra &frac12;&sigma;&sup2; is everything</div>
+          <div class="track-item"><span class="hi">GBM:</span> Apply It&ocirc;'s to log(S) &rarr; log-normal returns &rarr; foundation of Black-Scholes</div>
+          <div class="track-item"><span class="hi">SDEs:</span> Existence/uniqueness (Lipschitz), strong vs weak solutions, Ornstein-Uhlenbeck</div>
+          <div class="track-item"><span class="hi">Multi-dimensional:</span> Correlated BMs, matrix formulation for basket/multi-asset models</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--purple);">3</span><span class="track-title">Measure Change &amp; Pricing (Weeks 9-14)</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Radon-Nikodym:</span> How to change probability measures. The density process.</div>
+          <div class="track-item"><span class="hi">Girsanov:</span> Under Q, drift changes but vol stays. dWt_Q = dWt_P + &theta;&middot;dt</div>
+          <div class="track-item"><span class="hi">Risk-neutral pricing:</span> E^Q[e^(-rT) &middot; payoff]. WHY: replicating portfolio + no-arbitrage = unique price</div>
+          <div class="track-item"><span class="hi">Fundamental theorems:</span> No arbitrage = EMM exists. Complete market = unique EMM.</div>
+          <div class="track-item"><span class="hi">Feynman-Kac:</span> PDE solution = conditional expectation. Bridges BS PDE and risk-neutral pricing.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--amber);">4</span><span class="track-title">Beyond Black-Scholes (Weeks 15-20)</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Local vol:</span> Dupire's formula. Calibration to vanillas. Forward smile dynamics weakness.</div>
+          <div class="track-item"><span class="hi">Stochastic vol:</span> Heston (CIR for variance, Fourier inversion). SABR for rates/FX. Bergomi.</div>
+          <div class="track-item"><span class="hi">Jump diffusion:</span> Merton (Poisson+GBM). Kou double-exponential. Bates = Heston+jumps.</div>
+          <div class="track-item"><span class="hi">Rough volatility:</span> Fractional BM, rough Heston. Cutting-edge &mdash; signals genuine depth.</div>
+          <div class="track-item"><span class="hi">Free boundary:</span> American options as optimal stopping. Variational inequalities.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Linear Algebra for Quant Applications</span>
+      <span class="card-tag green">MONTHS 2-4</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">PCA for risk:</span> Eigendecomposition of correlation matrix &rarr; principal risk factors. Reduce 500 rate scenarios to 3 factors.</li>
+        <li><span class="hi">Cholesky:</span> Generate correlated MC paths. C = LL', Z_corr = L &middot; Z_indep.</li>
+        <li><span class="hi">Positive definiteness:</span> WHY correlation matrices must be PD. How to fix broken ones (nearest PD, eigenvalue clipping).</li>
+        <li><span class="hi">SVD:</span> Dimensionality reduction, pseudo-inverse, low-rank approximation for calibration.</li>
+        <li><span class="hi">Matrix calculus:</span> Gradient of portfolio variance w.r.t. weights. Mean-variance optimization.</li>
+        <li><span class="hi">Sparse matrices:</span> Large FD grids. Tri-diagonal solvers for implicit schemes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Numerical Methods: Where Math Meets Code</span>
+      <span class="card-tag">MONTHS 4-8</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--green);">1</span><span class="track-title">Monte Carlo Methods</span></div>
+        <div class="track-items">
+          <div class="track-item">Basic MC: LLN convergence, CLT error rate (1/&radic;N). Always compute standard error.</div>
+          <div class="track-item"><span class="hi">Variance reduction:</span> Antithetic variates, control variates, importance sampling, stratified sampling</div>
+          <div class="track-item">Path generation: Euler-Maruyama, Milstein (higher order). QMC: Sobol/Halton (O(1/N) vs O(1/&radic;N))</div>
+          <div class="track-item"><span class="hi">Least-squares MC:</span> Longstaff-Schwartz for American/Bermudan. Regression basis functions.</div>
+          <div class="track-item"><span class="hi">Greeks by MC:</span> Bump-reprice, pathwise (IPA), likelihood ratio. When each works.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--cyan);">2</span><span class="track-title">Finite Differences (PDE Solvers)</span></div>
+        <div class="track-items">
+          <div class="track-item">Explicit (simple, conditionally stable CFL), Implicit, <span class="hi">Crank-Nicolson</span> (industry standard, unconditionally stable)</div>
+          <div class="track-item">Boundary conditions: Dirichlet, Neumann, far-field asymptotic. ADI for multi-dimensional PDEs.</div>
+          <div class="track-item">Coordinate transforms: Log-price grid, non-uniform grids for barriers.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--purple);">3</span><span class="track-title">Calibration &amp; Optimization</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Root finding:</span> Newton-Raphson (implied vol), bisection, Brent's method</div>
+          <div class="track-item"><span class="hi">Least squares:</span> Levenberg-Marquardt for model calibration. Regularization.</div>
+          <div class="track-item"><span class="hi">Global optimization:</span> Differential evolution, simulated annealing for non-convex (Heston, SABR)</div>
+          <div class="track-item"><span class="hi">Convex:</span> QP for portfolio optimization. SOCP for CVaR minimization.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Statistics &amp; Machine Learning for Quant</span>
+      <span class="card-tag purple">MONTHS 6-10</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Time series:</span> AR, MA, ARMA, ARIMA, GARCH, regime-switching, cointegration</li>
+        <li><span class="hi">Bayesian methods:</span> Prior/posterior, MCMC, conjugate priors for calibration</li>
+        <li><span class="hi">Regression:</span> OLS, Ridge, LASSO, elastic net. Cross-validation. Factor models.</li>
+        <li><span class="hi">Tree models:</span> Random forests, XGBoost/LightGBM for credit scoring, failure prediction</li>
+        <li><span class="hi">Neural networks:</span> LSTMs for time series, autoencoders for anomaly detection, deep hedging</li>
+        <li><span class="hi">RL:</span> Optimal execution (Almgren-Chriss), market making as RL. Cutting edge.</li>
+        <li><span class="hi">Causal inference:</span> A/B testing for strategies, avoiding spurious correlations</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: PROGRAMMING -->
+<!-- ============================================================ -->
+<div class="section" id="sec-prog">
+  <p class="dim" style="margin-bottom:16px;">Elite quants don't just "know how to code." They write production systems handling billions. The bar: could your code go live at a trading firm tomorrow?</p>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Python: From Script Writer to Systems Engineer</span>
+      <span class="card-tag">TIER 3 TARGET</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--green);">1</span><span class="track-title">Language Mastery</span></div>
+        <div class="track-items">
+          <div class="track-item">Data model: Everything is an object. Mutability. Hashing rules. Dict O(1).</div>
+          <div class="track-item">Memory: Reference counting + generational GC. __slots__. sys.getsizeof().</div>
+          <div class="track-item">Generators/iterators: Lazy evaluation for large datasets. yield. itertools.</div>
+          <div class="track-item">Decorators: @property, @classmethod, custom for timing/caching/retry.</div>
+          <div class="track-item">Type hints: Full typing module. Generics. Protocol. mypy for static checking.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--cyan);">2</span><span class="track-title">Performance Engineering</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">NumPy internals:</span> C-contiguous memory, vectorization, broadcasting. 100x faster than loops.</div>
+          <div class="track-item"><span class="hi">Numba JIT:</span> @njit for hot loops. When it works vs doesn't.</div>
+          <div class="track-item"><span class="hi">Multiprocessing:</span> Bypass GIL. Pool, shared memory. concurrent.futures.</div>
+          <div class="track-item"><span class="hi">Profiling:</span> cProfile, line_profiler, py-spy. Always measure before optimizing.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--purple);">3</span><span class="track-title">Quant Python Stack</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">numpy:</span> Broadcasting, fancy indexing, structured arrays, np.einsum</div>
+          <div class="track-item"><span class="hi">pandas:</span> MultiIndex, groupby internals, .pipe(), categorical. Avoid iterrows().</div>
+          <div class="track-item"><span class="hi">scipy:</span> optimize, stats, interpolate, linalg</div>
+          <div class="track-item"><span class="hi">QuantLib-Python:</span> Industry standard. Curves, swaps, vol surfaces, exotics.</div>
+          <div class="track-item"><span class="hi">polars:</span> Modern pandas alternative. Lazy eval, multi-threaded. 10-100x faster.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">C++: The Performance Language</span>
+      <span class="card-tag">MONTHS 5-10</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Memory:</span> Stack vs heap, RAII, smart pointers (unique_ptr, shared_ptr). No raw new/delete.</li>
+        <li><span class="hi">STL:</span> vector, map, unordered_map, set, priority_queue. Know complexities cold.</li>
+        <li><span class="hi">OOP:</span> Virtual functions, polymorphism, abstract classes. Class hierarchy for option types.</li>
+        <li><span class="hi">Templates:</span> Generic Matrix class. Template specialization basics.</li>
+        <li><span class="hi">Move semantics:</span> Rvalue refs, std::move, perfect forwarding for performance.</li>
+        <li><span class="hi">Performance:</span> Cache friendliness, CRTP, custom allocators, multithreading (mutex, atomic).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Data Structures &amp; Algorithms: The Interview Gate</span>
+      <span class="card-tag amber">200+ PROBLEMS</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <p class="b">Pattern-based approach. Don't grind randomly &mdash; master patterns, then recognize them.</p>
+      <div class="grid2">
+        <div class="grid-cell"><span>Arrays + Two Pointers</span><span>20</span></div>
+        <div class="grid-cell"><span>Sliding Window</span><span>15</span></div>
+        <div class="grid-cell"><span>Hash Maps</span><span>20</span></div>
+        <div class="grid-cell"><span>Binary Search</span><span>15</span></div>
+        <div class="grid-cell"><span>Stacks / Monotonic</span><span>15</span></div>
+        <div class="grid-cell"><span>Trees + DFS/BFS</span><span>25</span></div>
+        <div class="grid-cell"><span>Dynamic Programming</span><span>45</span></div>
+        <div class="grid-cell"><span>Graphs</span><span>20</span></div>
+        <div class="grid-cell"><span>Heaps</span><span>10</span></div>
+        <div class="grid-cell"><span>Backtracking</span><span>10</span></div>
+      </div>
+      <p class="sm dim" style="margin-top:8px;">Rule: Can't solve Medium in 25 min? Read solution, then redo from scratch next day without looking.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">SQL: Beyond SELECT *</span>
+      <span class="card-tag">TIER 2 TARGET</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Window functions:</span> ROW_NUMBER, RANK, LAG/LEAD, running sums, NTILE</li>
+        <li><span class="hi">CTEs:</span> Recursive for hierarchical data. WITH for readability.</li>
+        <li><span class="hi">Performance:</span> Explain plans, index types, partitioning, materialized views</li>
+        <li><span class="hi">Quant patterns:</span> Time-weighted returns, drawdown, rolling correlations, VWAP</li>
+        <li><span class="hi">Snowflake:</span> Warehouse sizing, clustering keys, zero-copy clones</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: FINANCE -->
+<!-- ============================================================ -->
+<div class="section" id="sec-finance">
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Derivatives Pricing: The Complete Framework</span>
+      <span class="card-tag">CORE MASTERY</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--green);">1</span><span class="track-title">Vanilla Options (Know Absolutely Cold)</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Black-Scholes:</span> 3 derivations. All assumptions. Which break in practice.</div>
+          <div class="track-item"><span class="hi">Put-Call Parity:</span> Derive from no-arbitrage. Spot mispricing. Extend to dividends, FX.</div>
+          <div class="track-item"><span class="hi">Greeks:</span> Delta, Gamma (P&amp;L from rehedging), Theta (decay), Vega, Rho, Vanna, Volga</div>
+          <div class="track-item"><span class="hi">Greek interactions:</span> Gamma-theta tradeoff. Vanna-volga for exotics. Pin risk.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--cyan);">2</span><span class="track-title">Volatility: The Most Important Variable</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Historical:</span> Close-to-close, Parkinson, Garman-Klass, Yang-Zhang</div>
+          <div class="track-item"><span class="hi">Implied:</span> Newton-Raphson, Brenner-Subrahmanyam approx, Jaeckel rational (state of art)</div>
+          <div class="track-item"><span class="hi">Surface:</span> SVI parameterization. Arbitrage-free conditions. Interpolation.</div>
+          <div class="track-item"><span class="hi">Models:</span> Local vol (Dupire), Stochastic vol (Heston, SABR, Bergomi), Rough vol</div>
+          <div class="track-item"><span class="hi">VIX:</span> Not ATM IV! Weighted strip of OTM options. Replication formula.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--purple);">3</span><span class="track-title">Exotic Options</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Barriers:</span> Up/down, in/out. Reflection principle. Discrete monitoring adjustment.</div>
+          <div class="track-item"><span class="hi">Asians:</span> Arithmetic (MC) vs geometric (closed-form control variate). Turnbull-Wakeman.</div>
+          <div class="track-item"><span class="hi">Basket options:</span> Correlation is key. Worst-of, best-of, rainbow.</div>
+          <div class="track-item"><span class="hi">Autocallables:</span> Conditional early redemption. Huge in structured products.</div>
+        </div>
+      </div>
+      <div class="track">
+        <div class="track-head"><span class="track-num" style="background:var(--amber);">4</span><span class="track-title">Interest Rate Derivatives</span></div>
+        <div class="track-items">
+          <div class="track-item"><span class="hi">Curves:</span> Bootstrapping from deposits, futures, swaps. Log-linear, cubic spline interpolation.</div>
+          <div class="track-item"><span class="hi">Duration/Convexity:</span> Modified, Macaulay, effective. Key rate durations.</div>
+          <div class="track-item"><span class="hi">Models:</span> Vasicek, CIR, Hull-White (short rate). HJM framework. LIBOR Market Model.</div>
+          <div class="track-item"><span class="hi">Products:</span> IRS, swaptions, caps/floors. Multi-curve (OIS discounting post-2008).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Risk Management: Protecting the Firm</span>
+      <span class="card-tag amber">YOUR EDGE</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">VaR:</span> Parametric, Historical, MC. Backtesting: Kupiec, Christoffersen.</li>
+        <li><span class="hi">Expected Shortfall:</span> CVaR = average loss beyond VaR. Coherent (subadditive). Basel requirement.</li>
+        <li><span class="hi">Counterparty risk:</span> CVA/DVA/FVA. Exposure profiles (EE, PFE, EPE). Wrong-way risk.</li>
+        <li><span class="hi">Model risk:</span> Validation framework. Benchmarking. P&amp;L attribution. Sensitivity analysis.</li>
+        <li><span class="hi">Liquidity risk:</span> Market impact (Almgren-Chriss), funding vs market liquidity.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Energy &amp; Commodity Markets</span>
+      <span class="card-tag green">YOUR NICHE</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <p class="b" style="margin-bottom:8px;">This is where you build a moat. Your Beacon experience puts you ahead of 95% of quants.</p>
+      <ul>
+        <li><span class="hi">Forward curves:</span> Seasonality, convenience yield, storage costs. Contango vs backwardation.</li>
+        <li><span class="hi">Spread options:</span> Crack, spark, dark spreads. Margrabe formula and extensions.</li>
+        <li><span class="hi">Real options:</span> Power plant valuation as strip of spreads. Swing options.</li>
+        <li><span class="hi">RECs:</span> You already work with these. Pricing, compliance, banking rules.</li>
+        <li><span class="hi">Mean reversion:</span> Energy prices mean-revert. Ornstein-Uhlenbeck. Schwartz models.</li>
+        <li><span class="hi">Carbon markets:</span> EU ETS, compliance carbon. Rapidly growing &mdash; massive opportunity.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: SYSTEMS -->
+<!-- ============================================================ -->
+<div class="section" id="sec-systems">
+  <p class="dim" style="margin-bottom:16px;">The best quant in the world is useless if their models can't run in production. Systems thinking separates researchers from financial engineers.</p>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Pricing Engine Architecture</span>
+      <span class="card-tag green">YOU KNOW THIS</span>
+      <span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">DAG computation:</span> Pricing as directed acyclic graph. Dependency resolution. Incremental recalculation.</li>
+        <li><span class="hi">Market data layer:</span> Snapping, interpolation, fallback logic. Real-time vs EOD.</li>
+        <li><span class="hi">Model registry:</span> Version control. A/B testing new models. Rollback.</li>
+        <li><span class="hi">Caching:</span> Invalidation triggers. LRU vs TTL strategies.</li>
+        <li><span class="hi">Batch vs real-time:</span> EOD full reval vs intraday delta-based updates.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Data Infrastructure</span><span class="card-tag">BUILD THIS</span><span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Time-series DBs:</span> kdb+/q (industry standard), InfluxDB, TimescaleDB</li>
+        <li><span class="hi">Event streaming:</span> Kafka for trades, market data. Pub/sub. Exactly-once.</li>
+        <li><span class="hi">Data quality:</span> Validation, anomaly detection, reconciliation. Great Expectations.</li>
+        <li><span class="hi">ETL:</span> Airflow/Prefect orchestration. Idempotent tasks. Backfill.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Model Validation &amp; Governance</span><span class="card-tag purple">SENIOR SKILL</span><span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Independent validation:</span> Replicate from spec. Compare. Statistical deviation tests.</li>
+        <li><span class="hi">P&amp;L attribution:</span> Decompose into Greeks (delta, gamma, theta, vega, unexplained).</li>
+        <li><span class="hi">Benchmarking:</span> Compare to QuantLib, Bloomberg DLIB, analytical solutions.</li>
+        <li><span class="hi">Documentation:</span> Regulator-readable. Assumptions, limitations, conditions for use.</li>
+        <li><span class="hi">Backtesting:</span> Out-of-sample. Walk-forward. No look-ahead bias.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)">
+      <span class="card-title">Production Best Practices</span><span class="card-tag amber">DIFFERENTIATOR</span><span class="card-arrow">&#9662;</span>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Testing:</span> Unit for every pricer. Integration for E2E. Property-based (Hypothesis) for edges.</li>
+        <li><span class="hi">CI/CD:</span> Automated validation on every commit. Regression against known prices.</li>
+        <li><span class="hi">Monitoring:</span> Alert on degradation, data quality, pricing outliers.</li>
+        <li><span class="hi">Logging:</span> Structured audit trail. Every price reproducible from logged inputs.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: PROJECTS -->
+<!-- ============================================================ -->
+<div class="section" id="sec-projects">
+  <p class="dim" style="margin-bottom:16px;">Knowledge without application is trivia. Each project is a portfolio piece and interview conversation starter.</p>
+
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">01 &mdash; Complete Options Pricing Library</span><span class="card-tag green">Mo 1-4</span></div>
+    <p class="proj-desc">Build from scratch: BS closed-form, binomial trees, MC with variance reduction, finite differences. Full Greeks. IV solver. Compare to QuantLib.</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> Stochastic calc, numerical methods, Python engineering, testing</p>
+    <p class="proj-meta"><span class="b">Why:</span> Proof you understand pricing from first principles, not just API calls.</p>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">02 &mdash; Volatility Surface Builder</span><span class="card-tag green">Mo 3-6</span></div>
+    <p class="proj-desc">Ingest real options data. Build IV surface. SVI parameterization. Arbitrage-free conditions. 3D visualization. Local vol via Dupire.</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> Vol modeling, calibration, optimization, data handling</p>
+    <p class="proj-meta"><span class="b">Why:</span> Every firm builds vol surfaces. End-to-end capability is impressive.</p>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">03 &mdash; Monte Carlo Engine</span><span class="card-tag">Mo 4-7</span></div>
+    <p class="proj-desc">Configurable MC: multiple underlyings, correlated paths (Cholesky), exotic payoffs. Greeks via bump-reprice, pathwise, LR. Benchmarks.</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> MC methods, correlation, path dependency, performance</p>
+    <p class="proj-meta"><span class="b">Why:</span> MC is the workhorse. A well-engineered MC engine is the most useful thing you can build.</p>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">04 &mdash; Market Making Simulator</span><span class="card-tag">Mo 5-8</span></div>
+    <p class="proj-desc">Simulate order book with informed/noise traders. Avellaneda-Stoikov strategy. P&amp;L, inventory risk, Sharpe ratio tracking.</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> Microstructure, simulation, strategy, risk mgmt</p>
+    <p class="proj-meta"><span class="b">Why:</span> Directly relevant to trading firm interviews. Shows business understanding.</p>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">05 &mdash; Yield Curve Bootstrapper + Swap Pricer</span><span class="card-tag">Mo 6-9</span></div>
+    <p class="proj-desc">Bootstrap from deposits, futures, swaps. Interpolation. Price vanilla swaps, FRAs, caps. OIS discounting (multi-curve).</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> Fixed income, curve construction, multi-curve</p>
+    <p class="proj-meta"><span class="b">Why:</span> Fixed income is 70%+ of derivatives market. Every firm needs this.</p>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">06 &mdash; Risk Engine: VaR + Stress Testing</span><span class="card-tag purple">Mo 7-10</span></div>
+    <p class="proj-desc">Portfolio VaR (3 methods). ES. Backtesting (Kupiec, Christoffersen). Historical stress scenarios (2008, 2020).</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> Risk modeling, portfolio theory, statistics</p>
+    <p class="proj-meta"><span class="b">Why:</span> Connects BlackRock risk experience to rigorous implementation.</p>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">07 &mdash; Heston Calibration Engine</span><span class="card-tag purple">Mo 8-11</span></div>
+    <p class="proj-desc">Characteristic function pricing (Fourier inversion). Calibrate to real surface via Levenberg-Marquardt. Parameter sensitivity.</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> Stochastic vol, Fourier methods, optimization</p>
+    <p class="proj-meta"><span class="b">Why:</span> Industry standard stochastic vol model. Calibrating from scratch = deep understanding.</p>
+  </div>
+  <div class="proj">
+    <div class="proj-head"><span class="proj-title">08 &mdash; Energy Derivatives Platform</span><span class="card-tag amber">Mo 9-12</span></div>
+    <p class="proj-desc">Price spread options (spark/crack), swing options, storage. Mean-reverting models (Schwartz). Seasonal curves. Carbon pricing.</p>
+    <p class="proj-meta"><span class="hi">Skills:</span> Commodity modeling, real options, YOUR domain expertise</p>
+    <p class="proj-meta"><span class="b">Why:</span> Your crown jewel. Nobody else has this specific experience. Make it legendary.</p>
+  </div>
+
+  <div class="box box-cyan" style="margin-top:12px;">
+    <span class="b">GitHub structure:</span> Repo called "quant-engine." Clean README with architecture diagram. Each project as module. Notebooks with results. Your most powerful interview asset.
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: BOOKS -->
+<!-- ============================================================ -->
+<div class="section" id="sec-books">
+  <p class="dim" style="margin-bottom:16px;">Prioritized by impact. Quality of study over quantity &mdash; one chapter deeply understood beats five skimmed.</p>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Probability &amp; Interviews</span><span class="card-tag">4 BOOKS</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="track-items">
+        <div class="track-item"><span class="hi">1.</span> <span class="b">A Practical Guide to Quant Interviews</span> &mdash; Xinfeng Zhou. THE interview bible. Every problem. <span class="dim sm">Month 1</span></div>
+        <div class="track-item"><span class="hi">2.</span> <span class="b">Heard on the Street</span> &mdash; Timothy Crack. Brain teasers, mental math. <span class="dim sm">Month 1-2</span></div>
+        <div class="track-item"><span class="hi">3.</span> <span class="b">Introduction to Probability</span> &mdash; Blitzstein &amp; Hwang. Best probability textbook. Free lectures. <span class="dim sm">Month 1-4</span></div>
+        <div class="track-item"><span class="hi">4.</span> <span class="b">Fifty Challenging Problems</span> &mdash; Mosteller. Short, deep, elegant. <span class="dim sm">Month 3-6</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Stochastic Calculus &amp; Pricing</span><span class="card-tag">5 BOOKS</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="track-items">
+        <div class="track-item"><span class="hi">1.</span> <span class="b">Options, Futures, and Other Derivatives</span> &mdash; Hull. Industry bible. Ch 1-25. <span class="dim sm">Month 2-6</span></div>
+        <div class="track-item"><span class="hi">2.</span> <span class="b">Paul Wilmott Introduces QF</span> &mdash; Wilmott. Intuitive before rigorous. <span class="dim sm">Month 2-4</span></div>
+        <div class="track-item"><span class="hi">3.</span> <span class="b">Stochastic Calculus for Finance I &amp; II</span> &mdash; Shreve. The rigorous treatment. <span class="dim sm">Month 3-8</span></div>
+        <div class="track-item"><span class="hi">4.</span> <span class="b">Concepts &amp; Practice of Mathematical Finance</span> &mdash; Joshi. Theory to practice bridge. <span class="dim sm">Month 5-9</span></div>
+        <div class="track-item"><span class="hi">5.</span> <span class="b">The Volatility Surface</span> &mdash; Gatheral. THE vol book. <span class="dim sm">Month 6-10</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Programming &amp; Systems</span><span class="card-tag">4 BOOKS</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="track-items">
+        <div class="track-item"><span class="hi">1.</span> <span class="b">Cracking the Coding Interview</span> &mdash; McDowell. DS&amp;A with LeetCode. <span class="dim sm">Month 1-3</span></div>
+        <div class="track-item"><span class="hi">2.</span> <span class="b">Effective Python</span> &mdash; Slatkin. 90 practices. Cover to cover. <span class="dim sm">Month 2-4</span></div>
+        <div class="track-item"><span class="hi">3.</span> <span class="b">A Tour of C++</span> &mdash; Stroustrup. Then "Effective Modern C++" (Meyers). <span class="dim sm">Month 5-8</span></div>
+        <div class="track-item"><span class="hi">4.</span> <span class="b">Real World OCaml</span> &mdash; Minsky et al. For Jane Street. Free online. <span class="dim sm">Month 7-10</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Market Making &amp; Trading</span><span class="card-tag">4 BOOKS</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="track-items">
+        <div class="track-item"><span class="hi">1.</span> <span class="b">Trading and Exchanges</span> &mdash; Harris. Microstructure bible. <span class="dim sm">Month 4-7</span></div>
+        <div class="track-item"><span class="hi">2.</span> <span class="b">Thinking in Bets</span> &mdash; Annie Duke. Decisions under uncertainty. <span class="dim sm">Month 3</span></div>
+        <div class="track-item"><span class="hi">3.</span> <span class="b">Algorithmic Trading and DMA</span> &mdash; Johnson. Execution, impact, TCA. <span class="dim sm">Month 7-10</span></div>
+        <div class="track-item"><span class="hi">4.</span> <span class="b">Market Microstructure in Practice</span> &mdash; Lehalle &amp; Laruelle. Modern with data. <span class="dim sm">Month 8-11</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Thinking &amp; Mindset</span><span class="card-tag purple">5 BOOKS</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="track-items">
+        <div class="track-item"><span class="hi">1.</span> <span class="b">Thinking, Fast and Slow</span> &mdash; Kahneman. Cognitive biases. Essential. <span class="dim sm">Month 2</span></div>
+        <div class="track-item"><span class="hi">2.</span> <span class="b">Fooled by Randomness</span> &mdash; Taleb. Luck vs skill. Humbling. <span class="dim sm">Month 4</span></div>
+        <div class="track-item"><span class="hi">3.</span> <span class="b">How Not to Be Wrong</span> &mdash; Ellenberg. Math thinking for life. <span class="dim sm">Month 5</span></div>
+        <div class="track-item"><span class="hi">4.</span> <span class="b">The Signal and the Noise</span> &mdash; Silver. Prediction and calibration. <span class="dim sm">Month 6</span></div>
+        <div class="track-item"><span class="hi">5.</span> <span class="b">Good Strategy Bad Strategy</span> &mdash; Rumelt. Strategic thinking. <span class="dim sm">Month 8</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: WEEKLY SYSTEM -->
+<!-- ============================================================ -->
+<div class="section" id="sec-weekly">
+  <div class="box box-cyan">
+    <div style="font-size:14px;font-weight:700;color:var(--cyan);margin-bottom:4px;">The System That Builds Champions</div>
+    3 focused hours daily for a year = 940 hours. More deliberate practice than most put into their entire career. Designed for someone working full-time.
+  </div>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Daily Schedule (Weekdays, 3 hours)</span><span class="card-tag amber">NON-NEGOTIABLE</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--green);">06:30-07:00</div><div class="s">Mental Math</div></div><div class="tl-desc">Zetamac 15 min + 2 probability teasers. BEFORE anything else. Primes your analytical mind.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--cyan);">12:30-13:00</div><div class="s">Theory Reading</div></div><div class="tl-desc">10-15 pages of current textbook. Active: notes, work examples, derive before reading the derivation.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--purple);">19:00-20:00</div><div class="s">Deep Study</div></div><div class="tl-desc">The most important hour. Proofs, derivations, exercises. Single topic. No phone. Timer running.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--amber);">20:15-21:15</div><div class="s">Implementation</div></div><div class="tl-desc">MWF: LeetCode (2-3 by pattern). TTh: Project code + tests. Commit to GitHub.</div></div>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Saturday Deep Dive (4-5 hours)</span><span class="card-tag">WEEKLY</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">2 hours:</span> Project sprint. Ship something tangible every Saturday.</li>
+        <li><span class="hi">1 hour:</span> Mock interview (friend / interviewing.io / self-recorded).</li>
+        <li><span class="hi">1 hour:</span> Strategic games (poker, chess). Train probabilistic intuition.</li>
+        <li><span class="hi">30 min:</span> Weekly review. What's unclear? Adjust next week.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Sunday: REST</span><span class="card-tag green">MANDATORY</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <p>No studying. No coding. Your brain consolidates during rest. Exercise, socialize, non-finance interests. People who skip rest plateau faster and burn out. Neuroscience, not laziness.</p>
+    </div>
+  </div>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">12-Month Progress Tracker</span><span class="card-tag">MILESTONES</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <table class="tbl">
+        <thead><tr><th>Mo</th><th>Math Focus</th><th>Finance Focus</th><th>Coding</th><th>Project</th><th>ZM</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Probability I</td><td>Hull Ch 1-8</td><td>50 LC Easy</td><td>#01 Start</td><td>40+</td></tr>
+          <tr><td>2</td><td>Prob II + LinAlg</td><td>Hull Ch 9-15</td><td>LC Medium</td><td>#01 Greeks</td><td>50+</td></tr>
+          <tr><td>3</td><td>Stochastic Calc I</td><td>BS Derivation</td><td>DP focus</td><td>#01 Done</td><td>55+</td></tr>
+          <tr><td>4</td><td>Stochastic Calc II</td><td>Vol surface</td><td>Trees+Graphs</td><td>#02 Start</td><td>60+</td></tr>
+          <tr><td>5</td><td>Numerical Methods</td><td>Exotics</td><td>LC Hard</td><td>#02+03</td><td>70+</td></tr>
+          <tr><td>6</td><td>Statistics</td><td>Microstructure</td><td>SQL deep</td><td>#03+04</td><td>75+</td></tr>
+          <tr><td>7</td><td>Measure Theory</td><td>Fixed Income</td><td>C++ basics</td><td>#04+05</td><td>80+</td></tr>
+          <tr><td>8</td><td>Advanced Prob</td><td>Risk Mgmt</td><td>Sys Design</td><td>#05+06</td><td>85+</td></tr>
+          <tr><td>9</td><td>Review + Gaps</td><td>Energy Deriv</td><td>OCaml start</td><td>#07</td><td>90+</td></tr>
+          <tr><td>10</td><td>Interview Drill</td><td>Portfolio theory</td><td>Mock coding</td><td>#08</td><td>95+</td></tr>
+          <tr><td>11</td><td>Peak prep</td><td>Full review</td><td>Speed rounds</td><td>Polish all</td><td>100+</td></tr>
+          <tr><td>12</td><td>Maintain</td><td>Maintain</td><td>Maintain</td><td>Ship it</td><td>100+</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Monthly Rituals</span><span class="card-tag">REVIEW</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Assessment:</span> Practice exam &mdash; 10 prob problems, 3 LC mediums, 1 derivation, timed.</li>
+        <li><span class="hi">Topic rotation:</span> Shift focus monthly. Interleaving improves retention.</li>
+        <li><span class="hi">Spaced repetition:</span> Anki for formulas, distributions, derivation steps.</li>
+        <li><span class="hi">Network:</span> One coffee chat/month with someone in quant finance.</li>
+        <li><span class="hi">Write:</span> One blog post/month explaining a concept. Teaching + visibility.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: CAREER -->
+<!-- ============================================================ -->
+<div class="section" id="sec-career">
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Where You Fit: Firm Type Analysis</span><span class="card-tag">BE STRATEGIC</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="proj" style="border-left:3px solid var(--amber);">
+        <div class="proj-head"><span class="proj-title">Prop Trading (Jane Street, Optiver, SIG)</span><span class="card-tag amber">STRETCH</span></div>
+        <p class="proj-desc">Heaviest on math speed, brain teasers, trading games. Mostly olympiad backgrounds.</p>
+        <p class="proj-meta"><span class="hi">Action:</span> Apply months 10-12 after full prep. Warm-ups at smaller shops first.</p>
+      </div>
+      <div class="proj" style="border-left:3px solid var(--green);">
+        <div class="proj-head"><span class="proj-title">Hedge Fund Quant (Citadel, Two Sigma, DE Shaw)</span><span class="card-tag green">STRONG FIT</span></div>
+        <p class="proj-desc">Value production experience + math. Your Beacon model dev + Python align perfectly for quant dev roles.</p>
+        <p class="proj-meta"><span class="hi">Action:</span> Target quant developer / financial engineer roles. Emphasize production experience.</p>
+      </div>
+      <div class="proj" style="border-left:3px solid var(--green);">
+        <div class="proj-head"><span class="proj-title">Bank Quant Desk (Goldman Strats, JPM QR, Barclays)</span><span class="card-tag green">STRONG FIT</span></div>
+        <p class="proj-desc">Most accessible. Value domain expertise + coding. Your derivatives ops + CFA shows commitment.</p>
+        <p class="proj-meta"><span class="hi">Action:</span> Apply months 8-10. Network with specific desks (rates, commodities, risk).</p>
+      </div>
+      <div class="proj" style="border-left:3px solid var(--cyan);">
+        <div class="proj-head"><span class="proj-title">Energy / Commodity Trading</span><span class="card-tag">BEST FIT</span></div>
+        <p class="proj-desc">YOUR sweet spot. Beacon energy + emissions + RECs is directly relevant. BP, Shell, Vitol, Trafigura, Mercuria.</p>
+        <p class="proj-meta"><span class="hi">Action:</span> Apply months 6-8. May not need full 12 months. Domain expertise = moat.</p>
+      </div>
+      <div class="proj" style="border-left:3px solid var(--green);">
+        <div class="proj-head"><span class="proj-title">Fintech Quant (Bloomberg, Numerix, MSCI)</span><span class="card-tag green">STRONG FIT</span></div>
+        <p class="proj-desc">Build pricing/risk platforms. Your exact current work scaled up. Great stepping stones.</p>
+        <p class="proj-meta"><span class="hi">Action:</span> Apply anytime. These value production experience highly.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Resume Optimization</span><span class="card-tag">BEFORE APPLYING</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Quantify:</span> "Automated reconciliation of $2B+ derivative positions, reducing op risk 40%"</li>
+        <li><span class="hi">Lead with tech:</span> "Developed derivatives pricing models for energy futures" = first bullet</li>
+        <li><span class="hi">Projects:</span> GitHub link. "Built from-scratch options pricing library with MC, FD, analytical."</li>
+        <li><span class="hi">Certifications:</span> CFA L1 + Beacon Cert + Google Analytics is strong. Add coursework.</li>
+        <li><span class="hi">Tailor:</span> Energy for trading firms. Aladdin/risk for buy-side. Python/systems for fintech.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Application Timeline</span><span class="card-tag amber">PHASED</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--green);">Mo 6-7</div><div class="s">Wave 1</div></div><div class="tl-desc">Warm-ups: Energy trading, fintech quant. Lower bar, immediate relevance.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--cyan);">Mo 8-9</div><div class="s">Wave 2</div></div><div class="tl-desc">Mid-tier: Bank quant desks, mid-size hedge funds. Serious but achievable.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--purple);">Mo 10-11</div><div class="s">Wave 3</div></div><div class="tl-desc">Stretch: Jane Street, Optiver, Two Sigma, Citadel. Maximum difficulty.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--amber);">Mo 12</div><div class="s">Close</div></div><div class="tl-desc">Evaluate offers. Negotiate. Choose by learning velocity, not just comp.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION: ELITE EDGE -->
+<!-- ============================================================ -->
+<div class="section" id="sec-elite">
+
+  <div class="box" style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.02));border:1px solid rgba(245,158,11,0.2);">
+    <div style="font-size:15px;font-weight:700;color:var(--amber);margin-bottom:6px;">What Separates Good From Legendary</div>
+    <div style="color:var(--text);">Technical skill gets you hired. Becoming the best requires seeing connections others miss, communicating complex ideas simply, and making everyone around you better.</div>
+  </div>
+
+  <div class="card open">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">T-Shaped Expertise</span><span class="card-tag amber">CAREER STRATEGY</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <p><span class="hi">Your vertical bar:</span> Energy/commodity derivatives pricing. Go deeper than anyone. Become THE person firms call. Write papers. Speak at conferences. Build the definitive open-source energy derivatives library.</p>
+      <p><span class="hi">Your horizontal bar:</span> Solid across all four pillars &mdash; price any vanilla, write production code, understand risk, design systems.</p>
+      <p><span class="b">The mistake:</span> Trying to be good at everything. The market rewards specialists with broad foundations. Your Beacon energy experience is the seed.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Communication as Superpower</span><span class="card-tag purple">UNDERRATED</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Explain down:</span> BS to a trader with no math? To a regulator? To a client?</li>
+        <li><span class="hi">Explain up:</span> Complex model assumptions in 3 bullets for senior management.</li>
+        <li><span class="hi">Write clearly:</span> Docs a new joiner follows. Specs developers implement. Notes traders act on.</li>
+        <li><span class="hi">Present:</span> Record yourself. Eliminate filler. Use visuals, not equation walls.</li>
+        <li><span class="hi">Listen:</span> "What decision does this support?" before coding. Best quants understand the problem first.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">Continuous Learning System</span><span class="card-tag">LIFELONG</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><span class="hi">Papers:</span> 2 per month from SSRN, arXiv q-fin, Risk.net. Classics first, then new research.</li>
+        <li><span class="hi">Open source:</span> Contribute to QuantLib. Study professional pricing library architecture.</li>
+        <li><span class="hi">Teach:</span> Mentor juniors. Run training. Teaching fills your own gaps.</li>
+        <li><span class="hi">Adjacent:</span> ML for finance, climate finance, crypto derivatives. Stay on frontiers.</li>
+        <li><span class="hi">History:</span> Study crises: LTCM, 2008, volmageddon. Learn what kills quants.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head" onclick="toggleCard(this)"><span class="card-title">The 5-Year Vision</span><span class="card-tag amber">THINK BIG</span><span class="card-arrow">&#9662;</span></div>
+    <div class="card-body">
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--green);">Year 1</div><div class="s">Transform</div></div><div class="tl-desc">Execute this plan. Get hired at a strong firm. Master fundamentals deeply.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--cyan);">Year 2-3</div><div class="s">Specialize</div></div><div class="tl-desc">Become the go-to energy quant. Build internal tools teams depend on. Start publishing.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--purple);">Year 3-4</div><div class="s">Lead</div></div><div class="tl-desc">Lead a team or major project. Design systems, not just implement. Mentor.</div></div>
+      <div class="tl-item"><div class="tl-when"><div class="t" style="color:var(--amber);">Year 5</div><div class="s">Architect</div></div><div class="tl-desc">Senior quant / VP. Shape how the firm thinks about a problem domain. Move anywhere.</div></div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h3>The Truth About Being the Best</h3>
+    <p>The best quants aren't the ones who know the most formulas. They ask the right questions, build things that work, admit what they don't know, and keep learning after everyone else has stopped. You have the raw material. Now execute.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">Expand each card for details &mdash; Every section tailored to your background and goals</div>
+
+</div><!-- /wrap -->
+
+<script>
+// Tab switching
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sec-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// Card expand/collapse
+function toggleCard(head) {
+  head.parentElement.classList.toggle('open');
+}
+</script>
+</body>
+</html>
